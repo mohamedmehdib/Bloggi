@@ -66,14 +66,6 @@ export default function HomeBlog() {
     return date.toLocaleDateString('en-US', options); // Format as "Month Day, Year"
   };
 
-  // Toggle full content for a specific article
-  const toggleFullContent = (index: number) => {
-    setShowFullContent((prev) => ({
-      ...prev,
-      [index]: !prev[index], // Toggle the state for the specific article
-    }));
-  };
-
   // Loading and error states
   if (loading) {
     return <div className="text-center py-10">Loading...</div>;
