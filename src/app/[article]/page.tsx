@@ -1,8 +1,6 @@
 "use client";
-import Footer from "./Footer";
-import Hero from "./Hero";
-import HomeBlog from "./HomeBlog";
-import Navbar from "./Navbar";
+import Footer from "../Footer";
+import Navbar from "../Navbar";
 
 export default function Home() {
   const bgStyle = {
@@ -16,8 +14,6 @@ export default function Home() {
     <div style={bgStyle} className="overflow-x-hidden">
       <Navbar/>
       <div className="min-h-screen bg-white/50 backdrop-blur-3xl">
-        <Hero/>
-        <HomeBlog/>
         <Footer/>
       </div>
     </div>
