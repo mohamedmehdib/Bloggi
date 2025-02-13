@@ -105,8 +105,8 @@ export default function UploadArticle() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
+    <div className="min-h-screen flex justify-center items-center">
+      <div className="bg-white/30 p-8 rounded-lg shadow-lg w-full max-w-2xl">
         <h1 className="text-2xl font-semibold mb-6 text-center">
           Upload a New Article
         </h1>
