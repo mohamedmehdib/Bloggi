@@ -88,11 +88,16 @@ export default function UploadArticle() {
       setTopic("");
       setImage(null);
     } catch (err) {
-      console.error("Error uploading article:", {
-        message: err.message,
-        stack: err.stack,
-        details: err,
-      });
+      // Type-check the error
+      if (err instanceof Error) {
+        console.error("Error uploading article:", {
+          message: err.message,
+          stack: err.stack,
+          details: err,
+        });
+      } else {
+        console.error("Unknown error:", err);
+      }
       setError("An error occurred while uploading the article.");
     } finally {
       setLoading(false);
