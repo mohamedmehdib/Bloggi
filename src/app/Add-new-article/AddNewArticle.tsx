@@ -1,67 +1,202 @@
-import React from 'react';
+"use client";
 
-export default function AddNewArticle() {
+import { useState } from "react";
+import { supabase } from "../../lib/supabase";
+
+export default function UploadArticle() {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [topic, setTopic] = useState("");
+  const [image, setImage] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const topics = [
+    "Technology",
+    "Travel",
+    "Sport",
+    "Business",
+    "Trends",
+    "News",
+  ];
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    setError("");
+    setSuccess("");
+    setLoading(true);
+
+    if (!title || !content || !topic) {
+      setError("Please fill in all fields.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      let imageUrl = null;
+
+      if (image) {
+        console.log("Uploading image:", image.name);
+
+        const fileExt = image.name.split(".").pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        const filePath = `${fileName}`;
+
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from("article-images")
+          .upload(filePath, image);
+
+        if (uploadError) {
+          console.error("Upload error:", uploadError);
+          throw uploadError;
+        }
+
+        console.log("Image uploaded successfully:", uploadData);
+
+        const { data: urlData } = supabase.storage
+          .from("article-images")
+          .getPublicUrl(filePath);
+
+        console.log("Image URL:", urlData.publicUrl);
+        imageUrl = urlData.publicUrl;
+      }
+
+      console.log("Inserting article into database:", {
+        title,
+        content,
+        topic,
+        image_url: imageUrl,
+      });
+
+      const { data, error } = await supabase
+        .from("articles")
+        .insert([{ title, content, topic, image_url: imageUrl }])
+        .select();
+
+      if (error) {
+        console.error("Database insertion error:", error);
+        throw error;
+      }
+
+      console.log("Article inserted successfully:", data);
+
+      setSuccess("Article uploaded successfully!");
+      setTitle("");
+      setContent("");
+      setTopic("");
+      setImage(null);
+    } catch (err) {
+      console.error("Error uploading article:", {
+        message: err.message,
+        stack: err.stack,
+        details: err,
+      });
+      setError("An error occurred while uploading the article.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-white/50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto rounded-lg shadow-lg p-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">Add New Article</h1>
-        
-        <form>
+    <div className="min-h-screen flex justify-center items-center bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
+        <h1 className="text-2xl font-semibold mb-6 text-center">
+          Upload a New Article
+        </h1>
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Title Input */}
-          <div className="mb-6">
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+          <div>
+            <label htmlFor="title" className="block text-sm font-medium text-gray-700">
               Title
             </label>
             <input
               type="text"
               id="title"
-              name="title"
-              placeholder="Enter article title"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+              placeholder="Enter the article title"
+              required
             />
           </div>
 
-          {/* Content Textarea */}
-          <div className="mb-6">
-            <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
+          {/* Content Input */}
+          <div>
+            <label htmlFor="content" className="block text-sm font-medium text-gray-700">
               Content
             </label>
             <textarea
               id="content"
-              name="content"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
               rows={6}
               placeholder="Write your article content here..."
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              required
             />
           </div>
 
-          {/* Category Select */}
-          <div className="mb-6">
-            <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
-              Category
+          {/* Topic Dropdown */}
+          <div>
+            <label htmlFor="topic" className="block text-sm font-medium text-gray-700">
+              Topic
             </label>
             <select
-              id="category"
-              name="category"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              id="topic"
+              value={topic}
+              onChange={(e) => setTopic(e.target.value)}
+              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+              required
             >
-              <option value="">Select a category</option>
-              <option value="technology">Technology</option>
-              <option value="health">Health</option>
-              <option value="lifestyle">Lifestyle</option>
-              <option value="business">Business</option>
+              <option value="" disabled>
+                Select a topic
+              </option>
+              {topics.map((topicOption, index) => (
+                <option key={index} value={topicOption}>
+                  {topicOption}
+                </option>
+              ))}
             </select>
           </div>
 
+          {/* Image Upload */}
+          <div>
+            <label htmlFor="image" className="block text-sm font-medium text-gray-700">
+              Article Image (Optional)
+            </label>
+            <input
+              type="file"
+              id="image"
+              accept="image/*"
+              onChange={(e) => setImage(e.target.files?.[0] || null)}
+              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+            />
+          </div>
+
           {/* Submit Button */}
-          <div className="flex justify-end">
+          <div>
             <button
               type="submit"
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-300"
+              disabled={loading}
+              className="w-full py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-all"
             >
-              Publish Article
+              {loading ? "Uploading..." : "Upload Article"}
             </button>
           </div>
+
+          {/* Error and Success Messages */}
+          {error && (
+            <div className="text-red-500 text-center">
+              {error}
+            </div>
+          )}
+          {success && (
+            <div className="text-green-500 text-center">
+              {success}
+            </div>
+          )}
         </form>
       </div>
     </div>
