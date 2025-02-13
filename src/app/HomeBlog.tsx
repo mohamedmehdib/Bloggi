@@ -14,7 +14,7 @@ export default function HomeBlog() {
   }[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [showFullContent, setShowFullContent] = useState<{ [key: number]: boolean }>({}); // Track full content state for each article
+  const [showFullContent] = useState<{ [key: number]: boolean }>({}); // Track full content state for each article
 
   // Fetch articles from Supabase
   useEffect(() => {
