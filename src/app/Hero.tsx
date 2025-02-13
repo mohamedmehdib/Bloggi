@@ -10,8 +10,8 @@ export default function Hero() {
           Heartfelt Reflections: Stories of Love, Loss, and Growth
         </h1>
         <h3 className="text-2xl w-1/2 mx-auto">
-          "Welcome to the ultimate source for fresh perspectives! Explore curated
-          content to enlighten, entertain, and engage global readers."
+          &quot;Welcome to the ultimate source for fresh perspectives! Explore curated
+          content to enlighten, entertain, and engage global readers.&quot;
         </h3>
       </div>
 
