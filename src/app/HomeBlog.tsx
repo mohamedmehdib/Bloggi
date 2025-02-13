@@ -103,7 +103,7 @@ export default function HomeBlog() {
           <div key={index} className="flex flex-col md:flex-row gap-6 p-4 border-b-2 border-black/60 mx-16">
             {/* Article Image */}
             <div className="w-full md:w-96 relative">
-              <span className="absolute top-2 left-2 bg-white border-2 border-black p-2 rounded-lg text-sm">
+              <span className="absolute top-2 left-2 bg-white/40 font-medium p-2 rounded-lg text-sm">
                 {item.topic}
               </span>
               <Image 
