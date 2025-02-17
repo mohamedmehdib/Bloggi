@@ -140,6 +140,11 @@ export default function HomeBlog() {
                   {showFullContent[index] ? 'Show Less' : 'Read More'}
                 </button>
               )}
+              <div className="my-3 w-fit text-white bg-black/80 p-3 rounded-lg font-semibold">
+                <Link href={`/articles/${encodeURIComponent(item.title)}`}>
+                  Read Full Article
+                </Link>
+              </div>
             </div>
           </div>
         ))}

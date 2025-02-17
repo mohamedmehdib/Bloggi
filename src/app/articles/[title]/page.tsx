@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 
 export default async function ArticlePage({
-  params,
+  params, // Automatically inferred as { title: string }
 }: {
   params: { title: string };
 }) {
