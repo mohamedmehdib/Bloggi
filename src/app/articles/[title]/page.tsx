@@ -6,9 +6,20 @@ import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 
+// Define the Article interface
+interface Article {
+  title: string;
+  topic: string;
+  content: string;
+  image_url: string;
+  created_at: string;
+  writer: string;
+  slug: string;
+}
+
 export default function ArticlePage() {
   const params = useParams(); // Get params from the URL
-  const [article, setArticle] = useState<any>(null);
+  const [article, setArticle] = useState<Article | null>(null); // Use the Article interface
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
