@@ -4,24 +4,31 @@ import ArticleContent from './ArticleContent'; // Ensure this component exists
 import { generateSlug } from '@/lib/utils';
 
 
-export default async function ArticlePage({ params }: { params: { slug: string } }) {
+interface PageProps {
+  params: {
+    slug: string;
+  };
+}
+
+export default async function ArticlePage({ params }: PageProps) {
   // Decode the slug from the URL
   const currentSlug = decodeURIComponent(params.slug);
 
   // Debug: Log the current slug from the URL
   console.log("Current Slug:", currentSlug);
 
-  // Fetch all articles
+  // Fetch the article directly using the slug
   const { data: articles, error } = await supabase
     .from("articles")
-    .select("*");
+    .select("*")
+    .ilike("title", `%${currentSlug}%`); // Use ILIKE for case-insensitive search
 
   if (error) {
     return <div className="text-center py-10 text-red-500">Failed to load articles.</div>;
   }
 
-  if (!articles) {
-    return <div className="text-center py-10">No articles found.</div>;
+  if (!articles || articles.length === 0) {
+    return <div className="text-center py-10">Article not found.</div>;
   }
 
   // Debug: Log the slugs generated from article titles
