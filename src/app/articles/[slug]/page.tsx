@@ -20,18 +20,17 @@ export default async function ArticlePage({ params }: { params: { slug: string }
   // Debug: Log the current slug from the URL
   console.log("Current Slug:", currentSlug);
 
-  // Fetch the article directly using the slug
+  // Fetch all articles
   const { data: articles, error } = await supabase
     .from("articles")
-    .select("*")
-    .ilike("title", `%${currentSlug}%`); // Use ILIKE for case-insensitive search
+    .select("*");
 
   if (error) {
     return <div className="text-center py-10 text-red-500">Failed to load articles.</div>;
   }
 
-  if (!articles || articles.length === 0) {
-    return <div className="text-center py-10">Article not found.</div>;
+  if (!articles) {
+    return <div className="text-center py-10">No articles found.</div>;
   }
 
   // Debug: Log the slugs generated from article titles
