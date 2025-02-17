@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation"; // Import useRouter from next/navigation
+import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabase";
 
 const SignUp = () => {
@@ -12,7 +12,7 @@ const SignUp = () => {
   const [success, setSuccess] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const router = useRouter(); // Initialize useRouter from next/navigation
+  const router = useRouter();
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -35,7 +35,6 @@ const SignUp = () => {
 
     setLoading(true);
     try {
-      // Check if the user already exists
       const { data: existingUser } = await supabase
         .from("users")
         .select("email")
@@ -48,7 +47,6 @@ const SignUp = () => {
         return;
       }
 
-      // Sign up the user
       const { error: signUpError } = await supabase.auth.signUp({
         email,
         password,
@@ -60,7 +58,6 @@ const SignUp = () => {
         return;
       }
 
-      // Insert user data into the `users` table
       const { error: insertError } = await supabase.from("users").insert([
         { email, name, phone },
       ]);
@@ -71,7 +68,6 @@ const SignUp = () => {
         return;
       }
 
-      // Sign in the user immediately after sign-up
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -85,9 +81,8 @@ const SignUp = () => {
 
       setSuccess("Sign up successful! You are now logged in.");
 
-      // Wait 3 seconds and then redirect to "/"
       setTimeout(() => {
-        router.push("/Account"); // Redirect to the home page
+        router.push("/Account");
       }, 1500);
     } catch (err) {
       console.error("Unexpected error:", err);

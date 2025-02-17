@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import Image from 'next/image';
+import { generateSlug } from '@/lib/utils'; // Import the slug utility
 
 export default function HomeBlog() {
   const [articles, setArticles] = useState<{ 
+    id: string; 
     title: string; 
     topic: string; 
     content: string; 
@@ -14,7 +16,6 @@ export default function HomeBlog() {
   }[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [showFullContent] = useState<{ [key: number]: boolean }>({}); // Track full content state for each article
 
   // Fetch articles from Supabase
   useEffect(() => {
@@ -22,7 +23,7 @@ export default function HomeBlog() {
       try {
         const { data, error } = await supabase
           .from("articles")
-          .select("title, topic, content, image_url, created_at, writer");
+          .select("id, title, topic, content, image_url, created_at, writer");
 
         if (error) {
           throw error;
@@ -50,7 +51,7 @@ export default function HomeBlog() {
     { icon: "uil uil-newspaper", name: "News" },
   ];
 
-  // Function to truncate content to a maximum number of words
+  // Function to truncate content
   const truncateContent = (content: string, maxWords: number) => {
     const words = content.split(" ");
     if (words.length > maxWords) {
@@ -59,11 +60,11 @@ export default function HomeBlog() {
     return content;
   };
 
-  // Function to format date as "Month Day, Year" (e.g., October 16, 2024)
+  // Function to format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-    return date.toLocaleDateString('en-US', options); // Format as "Month Day, Year"
+    return date.toLocaleDateString('en-US', options);
   };
 
   // Loading and error states
@@ -99,43 +100,46 @@ export default function HomeBlog() {
 
       {/* Articles Section */}
       <div className="mt-10 space-y-8">
-        {articles.map((item, index) => (
-          <div key={index} className="flex flex-col md:flex-row gap-6 p-4 border-b-2 border-black/60 mx-16">
-            {/* Article Image */}
-            <div className="w-full md:w-96 relative">
-              <span className="absolute top-2 left-2 bg-white/40 font-medium p-2 rounded-lg text-sm">
-                {item.topic}
-              </span>
-              <Image 
-                src={item.image_url} 
-                alt="Article" 
-                height={500} 
-                width={500} 
-                className="rounded-xl object-cover"
-              />
-            </div>
-
-            {/* Article Content */}
-            <div className="flex-1">
-              <div className="font-medium">
-                <span>{item.writer}</span> on <span className="text-zinc-700">{formatDate(item.created_at)}</span>
+        {articles.map((item, index) => {
+          const slug = generateSlug(item.title); // Generate slug from the title
+          return (
+            <div key={index} className="flex flex-col md:flex-row gap-6 p-4 border-b-2 border-black/60 mx-16">
+              {/* Article Image */}
+              <div className="w-full md:w-96 relative">
+                <span className="absolute top-2 left-2 bg-white/40 font-medium p-2 rounded-lg text-sm">
+                  {item.topic}
+                </span>
+                <Image 
+                  src={item.image_url} 
+                  alt="Article" 
+                  height={500} 
+                  width={500} 
+                  className="rounded-xl object-cover"
+                />
               </div>
-              <h2 className="text-3xl font-semibold mt-2">
-                {item.title}
-              </h2>
-              <p className="mt-4 text-gray-700">
-                {showFullContent[index] ? item.content : truncateContent(item.content, 50)} {/* Show truncated or full content */}
-              </p>
-              <div className="my-3 w-fit text-white bg-black/80 p-3 rounded-lg font-semibold">
-                {item.content.split(" ").length > 50 && (
-                    <Link href="">
+
+              {/* Article Content */}
+              <div className="flex-1">
+                <div className="font-medium">
+                  <span>{item.writer}</span> on <span className="text-zinc-700">{formatDate(item.created_at)}</span>
+                </div>
+                <h2 className="text-3xl font-semibold mt-2">
+                  {item.title}
+                </h2>
+                <p className="mt-4 text-gray-700">
+                  {truncateContent(item.content, 50)} {/* Show truncated content */}
+                </p>
+                <div className="my-3 w-fit text-white bg-black/80 p-3 rounded-lg font-semibold">
+                  {item.content.split(" ").length > 50 && (
+                    <Link href={`/articles/${slug}`}> {/* Use the slug in the URL */}
                       Read More
                     </Link>
-                )}
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

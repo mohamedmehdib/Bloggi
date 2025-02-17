@@ -2,7 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ['lrllicwvskiwlvtkkfkl.supabase.co'], // Add your Supabase URL here
     remotePatterns: [
       {
         protocol: 'https',

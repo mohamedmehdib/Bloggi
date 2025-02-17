@@ -88,7 +88,6 @@ export default function UploadArticle() {
       setTopic("");
       setImage(null);
     } catch (err) {
-      // Type-check the error
       if (err instanceof Error) {
         console.error("Error uploading article:", {
           message: err.message,
@@ -111,7 +110,6 @@ export default function UploadArticle() {
           Upload a New Article
         </h1>
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Title Input */}
           <div>
             <label htmlFor="title" className="block text-sm font-medium text-gray-700">
               Title
@@ -127,7 +125,6 @@ export default function UploadArticle() {
             />
           </div>
 
-          {/* Content Input */}
           <div>
             <label htmlFor="content" className="block text-sm font-medium text-gray-700">
               Content
@@ -143,7 +140,6 @@ export default function UploadArticle() {
             />
           </div>
 
-          {/* Topic Dropdown */}
           <div>
             <label htmlFor="topic" className="block text-sm font-medium text-gray-700">
               Topic
@@ -166,7 +162,6 @@ export default function UploadArticle() {
             </select>
           </div>
 
-          {/* Image Upload */}
           <div>
             <label htmlFor="image" className="block text-sm font-medium text-gray-700">
               Article Image (Optional)
@@ -180,7 +175,6 @@ export default function UploadArticle() {
             />
           </div>
 
-          {/* Submit Button */}
           <div>
             <button
               type="submit"
@@ -191,7 +185,6 @@ export default function UploadArticle() {
             </button>
           </div>
 
-          {/* Error and Success Messages */}
           {error && (
             <div className="text-red-500 text-center">
               {error}
