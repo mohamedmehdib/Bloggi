@@ -15,14 +15,11 @@ export default function ArticlePage() {
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        // Decode the title from the URL
-        const decodedTitle = decodeURIComponent(params.title as string);
-
-        // Fetch the article from Supabase
+        // Fetch the article from Supabase using the slug
         const { data, error } = await supabase
           .from("articles")
           .select("*")
-          .eq("title", decodedTitle)
+          .eq("slug", params.title) // Use the slug for querying
           .single();
 
         if (error || !data) {

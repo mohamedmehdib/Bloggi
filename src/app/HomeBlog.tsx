@@ -5,6 +5,7 @@ import Link from "next/link";
 import Head from "next/head";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
+import { generateSlug } from "@/lib/utils";
 
 interface Article {
   title: string;
@@ -13,6 +14,7 @@ interface Article {
   image_url: string;
   created_at: string;
   writer: string;
+  slug: string; // Add slug to the interface
 }
 
 export default function HomeBlog() {
@@ -26,7 +28,7 @@ export default function HomeBlog() {
       try {
         const { data, error } = await supabase
           .from("articles")
-          .select("title, topic, content, image_url, created_at, writer");
+          .select("title, topic, content, image_url, created_at, writer, slug");
 
         if (error) {
           throw error;
@@ -100,7 +102,7 @@ export default function HomeBlog() {
                 {truncateContent(article.content, 50)}
               </p>
               <div className="my-3 w-fit text-white bg-black/80 p-3 rounded-lg font-semibold">
-                <Link href={`/articles/${encodeURIComponent(article.title)}`}>
+                <Link href={`/articles/${article.slug}`}>
                   Read More
                 </Link>
               </div>
