@@ -39,7 +39,7 @@ export default function Footer() {
           </span>
           <span className="text-gray-500">
             Powered by{' '}
-            <Link href="https://mohamedmehdi.me/" className="font-medium text-black hover:text-blue-500 transition">
+            <Link target='_blank' href="https://mohamedmehdi.me/" className="font-medium text-black hover:text-blue-500 transition">
               Mohamed Mehdi
             </Link>
           </span>
