@@ -3,15 +3,6 @@ import { supabase } from '@/lib/supabase';
 import ArticleContent from './ArticleContent'; // Ensure this component exists
 import { generateSlug } from '@/lib/utils';
 
-interface Article {
-  id: string;
-  title: string;
-  topic: string;
-  content: string;
-  image_url: string;
-  created_at: string;
-  writer: string;
-}
 
 export default async function ArticlePage({ params }: { params: { slug: string } }) {
   // Decode the slug from the URL
