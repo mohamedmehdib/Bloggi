@@ -2,14 +2,12 @@ import { supabase } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 
-interface ArticlePageProps {
-  params: {
-    title: string;
-  };
-}
-
-export default async function ArticlePage({ params }: ArticlePageProps) {
-  // Destructure params directly (no need for await)
+export default async function ArticlePage({
+  params,
+}: {
+  params: { title: string };
+}) {
+  // Destructure params directly
   const { title } = params;
 
   // Decode the title from the URL
