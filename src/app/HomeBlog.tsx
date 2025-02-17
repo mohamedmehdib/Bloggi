@@ -5,7 +5,6 @@ import Link from "next/link";
 import Head from "next/head";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
-import { generateSlug } from "@/lib/utils";
 
 interface Article {
   title: string;
