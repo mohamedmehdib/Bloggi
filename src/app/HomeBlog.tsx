@@ -1,28 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase';
+import Head from 'next/head';
 import Image from 'next/image';
+import { supabase } from '@/lib/supabase';
+
+interface Article {
+  title: string;
+  topic: string;
+  content: string;
+  image_url: string;
+  created_at: string;
+  writer: string;
+}
 
 export default function HomeBlog() {
-  const [articles, setArticles] = useState<{ 
-    title: string; 
-    topic: string; 
-    content: string; 
-    image_url: string; 
-    created_at: string; 
-    writer: string 
-  }[]>([]);
+  const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [showFullContent] = useState<{ [key: number]: boolean }>({}); // Track full content state for each article
+  const [error, setError] = useState('');
+  const [showFullContent, setShowFullContent] = useState<{ [key: number]: boolean }>({});
 
   // Fetch articles from Supabase
   useEffect(() => {
     const fetchArticles = async () => {
       try {
         const { data, error } = await supabase
-          .from("articles")
-          .select("title, topic, content, image_url, created_at, writer");
+          .from('articles')
+          .select('title, topic, content, image_url, created_at, writer');
 
         if (error) {
           throw error;
@@ -30,8 +33,8 @@ export default function HomeBlog() {
 
         setArticles(data || []);
       } catch (err) {
-        console.error("Error fetching articles:", err);
-        setError("Failed to load articles.");
+        console.error('Error fetching articles:', err);
+        setError('Failed to load articles.');
       } finally {
         setLoading(false);
       }
@@ -42,28 +45,32 @@ export default function HomeBlog() {
 
   // Topics data
   const topics = [
-    { icon: "uil uil-robot", name: "Technology" },
-    { icon: "uil uil-plane-departure", name: "Travel" },
-    { icon: "uil uil-basketball", name: "Sport" },
-    { icon: "uil uil-dollar-alt", name: "Business" },
-    { icon: "uil uil-fire", name: "Trends" },
-    { icon: "uil uil-newspaper", name: "News" },
+    { icon: 'uil uil-robot', name: 'Technology' },
+    { icon: 'uil uil-plane-departure', name: 'Travel' },
+    { icon: 'uil uil-basketball', name: 'Sport' },
+    { icon: 'uil uil-dollar-alt', name: 'Business' },
+    { icon: 'uil uil-fire', name: 'Trends' },
+    { icon: 'uil uil-newspaper', name: 'News' },
   ];
 
-  // Function to truncate content to a maximum number of words
+  // Function to truncate content
   const truncateContent = (content: string, maxWords: number) => {
-    const words = content.split(" ");
-    if (words.length > maxWords) {
-      return words.slice(0, maxWords).join(" ") + "...";
-    }
-    return content;
+    return content.split(' ').slice(0, maxWords).join(' ') + '...';
   };
 
-  // Function to format date as "Month Day, Year" (e.g., October 16, 2024)
+  // Function to format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-    return date.toLocaleDateString('en-US', options); // Format as "Month Day, Year"
+    return date.toLocaleDateString('en-US', options);
+  };
+
+  // Toggle full content visibility
+  const toggleContent = (index: number) => {
+    setShowFullContent((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
   };
 
   // Loading and error states
@@ -77,17 +84,18 @@ export default function HomeBlog() {
 
   return (
     <div className="py-10">
-      {/* Include Unicons CSS */}
-      <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css" />
+      <Head>
+        <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css" />
+      </Head>
 
       {/* Trending Topics Section */}
       <div className="text-center">
         <h3 className="font-semibold py-5">Explore Trending Topics</h3>
         <div className="w-full md:w-1/2 mx-auto flex flex-wrap justify-center gap-5 py-4">
           {topics.map((item, index) => (
-            <Link 
-              key={index} 
-              href="#" 
+            <Link
+              key={index}
+              href="#"
               className="p-3 rounded-full border-2 border-black hover:bg-black hover:text-white duration-300 flex items-center space-x-2"
             >
               <i className={`${item.icon} text-xl`}></i>
@@ -106,11 +114,11 @@ export default function HomeBlog() {
               <span className="absolute top-2 left-2 bg-white/40 font-medium p-2 rounded-lg text-sm">
                 {item.topic}
               </span>
-              <Image 
-                src={item.image_url} 
-                alt="Article" 
-                height={500} 
-                width={500} 
+              <Image
+                src={item.image_url}
+                alt="Article"
+                height={500}
+                width={500}
                 className="rounded-xl object-cover"
               />
             </div>
@@ -120,19 +128,18 @@ export default function HomeBlog() {
               <div className="font-medium">
                 <span>{item.writer}</span> on <span className="text-zinc-700">{formatDate(item.created_at)}</span>
               </div>
-              <h2 className="text-3xl font-semibold mt-2">
-                {item.title}
-              </h2>
+              <h2 className="text-3xl font-semibold mt-2">{item.title}</h2>
               <p className="mt-4 text-gray-700">
-                {showFullContent[index] ? item.content : truncateContent(item.content, 50)} {/* Show truncated or full content */}
+                {showFullContent[index] ? item.content : truncateContent(item.content, 50)}
               </p>
-              <div className="my-3 w-fit text-white bg-black/80 p-3 rounded-lg font-semibold">
-                {item.content.split(" ").length > 50 && (
-                  <Link href={`/articles/${encodeURIComponent(item.title)}`}>
-                    Read More
-                  </Link>
-                )}
-              </div>
+              {item.content.split(' ').length > 50 && (
+                <button
+                  onClick={() => toggleContent(index)}
+                  className="my-3 w-fit text-white bg-black/80 p-3 rounded-lg font-semibold"
+                >
+                  {showFullContent[index] ? 'Show Less' : 'Read More'}
+                </button>
+              )}
             </div>
           </div>
         ))}
