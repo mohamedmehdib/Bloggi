@@ -1,28 +1,55 @@
-import { supabase } from '@/lib/supabase';
-import { notFound } from 'next/navigation';
-import Image from 'next/image';
+"use client";
 
-export default async function ArticlePage({
-  params, // Automatically inferred as { title: string }
-}: {
-  params: { title: string };
-}) {
-  // Destructure params directly
-  const { title } = params;
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { supabase } from "@/lib/supabase";
+import { notFound } from "next/navigation";
+import Image from "next/image";
 
-  // Decode the title from the URL
-  const decodedTitle = decodeURIComponent(title);
+export default function ArticlePage() {
+  const params = useParams(); // Get params from the URL
+  const [article, setArticle] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-  // Fetch the article from Supabase
-  const { data: article, error } = await supabase
-    .from('articles')
-    .select('*')
-    .eq('title', decodedTitle)
-    .single();
+  useEffect(() => {
+    const fetchArticle = async () => {
+      try {
+        // Decode the title from the URL
+        const decodedTitle = decodeURIComponent(params.title as string);
 
-  // Handle errors or missing articles
-  if (error || !article) {
-    console.error('Error fetching article:', error);
+        // Fetch the article from Supabase
+        const { data, error } = await supabase
+          .from("articles")
+          .select("*")
+          .eq("title", decodedTitle)
+          .single();
+
+        if (error || !data) {
+          throw new Error("Article not found");
+        }
+
+        setArticle(data);
+      } catch (err) {
+        console.error("Error fetching article:", err);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchArticle();
+  }, [params.title]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return notFound();
+  }
+
+  if (!article) {
     return notFound();
   }
 
@@ -30,7 +57,7 @@ export default async function ArticlePage({
     <div className="p-10">
       <h1 className="text-4xl font-bold mb-4">{article.title}</h1>
       <div className="text-gray-600 mb-4">
-        <span>{article.writer}</span> on{' '}
+        <span>{article.writer}</span> on{" "}
         <span>{new Date(article.created_at).toLocaleDateString()}</span>
       </div>
       <Image
