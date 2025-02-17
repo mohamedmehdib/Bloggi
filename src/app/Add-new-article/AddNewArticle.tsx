@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabase";
 
 export default function UploadArticle() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [topic, setTopic] = useState("");
+  const [writer, setWriter] = useState(""); // State to store the writer's name
   const [image, setImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -21,6 +22,41 @@ export default function UploadArticle() {
     "News",
   ];
 
+  // Fetch the authenticated user's name from the `users` table
+  useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        // Step 1: Get the authenticated user's email
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) {
+          throw new Error("User not authenticated.");
+        }
+
+        const userEmail = user.email;
+
+        // Step 2: Query the `users` table to find the `name` associated with the email
+        const { data: userData, error: userError } = await supabase
+          .from("users")
+          .select("name")
+          .eq("email", userEmail)
+          .single();
+
+        if (userError || !userData) {
+          throw new Error("Failed to fetch user name.");
+        }
+
+        // Step 3: Set the writer's name
+        setWriter(userData.name);
+      } catch (err) {
+        console.error("Error fetching user name:", err);
+        setError("Failed to fetch user information.");
+      }
+    };
+
+    fetchUserName();
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -28,7 +64,7 @@ export default function UploadArticle() {
     setSuccess("");
     setLoading(true);
 
-    if (!title || !content || !topic) {
+    if (!title || !content || !topic || !writer) {
       setError("Please fill in all fields.");
       setLoading(false);
       return;
@@ -67,12 +103,13 @@ export default function UploadArticle() {
         title,
         content,
         topic,
+        writer, // Include the writer's name
         image_url: imageUrl,
       });
 
       const { data, error } = await supabase
         .from("articles")
-        .insert([{ title, content, topic, image_url: imageUrl }])
+        .insert([{ title, content, topic, writer, image_url: imageUrl }]) // Include writer in the insert
         .select();
 
       if (error) {

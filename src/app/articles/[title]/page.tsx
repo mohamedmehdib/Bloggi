@@ -5,6 +5,8 @@ import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import Navbar from "@/app/Navbar";
+import Footer from "@/app/Footer";
 
 // Define the Article interface
 interface Article {
@@ -63,19 +65,21 @@ export default function ArticlePage() {
 
   return (
     <div className="p-10">
-      <h1 className="text-4xl font-bold mb-4">{article.title}</h1>
-      <div className="text-gray-600 mb-4">
-        <span>{article.writer}</span> on{" "}
-        <span>{new Date(article.created_at).toLocaleDateString()}</span>
-      </div>
-      <Image
+        <Navbar/>
+        <h1 className="text-4xl font-bold mb-4">{article.title}</h1>
+        <div className="text-gray-600 mb-4">
+            <span>{article.writer}</span> on{" "}
+            <span>{new Date(article.created_at).toLocaleDateString()}</span>
+        </div>
+        <Image
         src={article.image_url}
         alt={article.title}
         width={1200} // Set appropriate width
         height={400} // Set appropriate height
         className="w-full h-96 object-cover rounded-lg mb-6"
-      />
-      <p className="text-lg text-gray-700">{article.content}</p>
+        />
+        <p className="text-lg text-gray-700">{article.content}</p>
+        <Footer/>
     </div>
   );
 }

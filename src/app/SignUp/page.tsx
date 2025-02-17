@@ -11,7 +11,6 @@ const SignUp = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
   const router = useRouter();
 
   const validateEmail = (email: string) => {
@@ -59,7 +58,7 @@ const SignUp = () => {
       }
 
       const { error: insertError } = await supabase.from("users").insert([
-        { email, name, phone },
+        { email, name },
       ]);
 
       if (insertError) {
@@ -121,14 +120,6 @@ const SignUp = () => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           aria-label="Name"
-        />
-        <input
-          type="text"
-          placeholder="Phone"
-          className="w-full p-2 border mb-4 rounded"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          aria-label="Phone"
         />
 
         <button

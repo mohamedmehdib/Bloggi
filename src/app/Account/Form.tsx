@@ -8,7 +8,6 @@ const FormPage: React.FC = () => {
 
   const [email, setEmail] = useState<string>("");
   const [name, setName] = useState<string>("");
-  const [phone, setPhone] = useState<string>("");
   const [fetching, setFetching] = useState<boolean>(true);
 
   const handleUpdate = async () => {
@@ -22,7 +21,6 @@ const FormPage: React.FC = () => {
         .from("users")
         .update({
           name: name.trim(),
-          phone: phone.trim(),
         })
         .eq("email", user.email);
 
@@ -48,7 +46,7 @@ const FormPage: React.FC = () => {
 
         const { data, error } = await supabase
           .from("users")
-          .select("email, name, phone")
+          .select("email, name")
           .eq("email", user.email)
           .single();
 
@@ -57,7 +55,6 @@ const FormPage: React.FC = () => {
         if (data) {
           setEmail(data.email || "");
           setName(data.name || "");
-          setPhone(data.phone || "");
         }
       } catch (err: unknown) {
         if (err instanceof Error) {
@@ -110,18 +107,6 @@ const FormPage: React.FC = () => {
             id="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="mt-1 block w-full px-3 py-2 border-2 border-black rounded-md shadow-sm focus:outline-none bg-transparent"
-          />
-        </div>
-        <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-            Phone
-          </label>
-          <input
-            type="text"
-            id="phone"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
             className="mt-1 block w-full px-3 py-2 border-2 border-black rounded-md shadow-sm focus:outline-none bg-transparent"
           />
         </div>

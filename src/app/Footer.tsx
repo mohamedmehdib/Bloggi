@@ -25,9 +25,8 @@ export default function Footer() {
           <div className="text-left">
             <h3 className="text-xl font-semibold text-black mb-4">Contact Us</h3>
             <ul className="space-y-2 text-gray-600">
-              <li>Phone: <span className="font-medium">73 213 065 / 55 008 585</span></li>
-              <li>Email: clickstoretunisie@gmail.com</li>
-              <li>Adresse : Imm Rahma Rue Mongi Bali korniche Sousse 4056</li>
+              <li>Phone: <span className="font-medium">23 456 789</span></li>
+              <li>Adresse : Rue Bassatin , Thrayet , Ksibet Sousse , Sousse 4041</li>
             </ul>
           </div>
         </div>
@@ -36,13 +35,13 @@ export default function Footer() {
 
         <div className="flex flex-col md:flex-row justify-between items-center text-center md:text-left space-y-4 md:space-y-0 mt-6">
           <span className="text-gray-500">
-            © 2025 <span className="font-semibold text-black">Click Store</span>. All rights reserved.
+            © 2025 <span className="font-semibold text-black">Bloggi</span>. All rights reserved.
           </span>
           <span className="text-gray-500">
             Powered by{' '}
-            <span className="font-medium text-black hover:text-blue-500 transition">
-              Click Store
-            </span>
+            <Link href="https://mohamedmehdi.me/" className="font-medium text-black hover:text-blue-500 transition">
+              Mohamed Mehdi
+            </Link>
           </span>
         </div>
       </div>
