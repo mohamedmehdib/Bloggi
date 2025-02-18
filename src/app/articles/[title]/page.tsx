@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Navbar from "../../Navbar";
 import Footer from "../../Footer";
+import Loading from "@/app/Loading";
 
 interface Article {
   title: string;
@@ -57,7 +58,7 @@ export default function ArticlePage() {
   }, [params.title]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="h-screen"><Loading/></div>;
   }
 
   if (error) {
@@ -70,22 +71,28 @@ export default function ArticlePage() {
 
   return (
     <div style={bgStyle} className="overflow-x-hidden">
-      <Navbar/>
-      <div className="min-h-screen bg-white/50 backdrop-blur-3xl pt-36">
-        <h1 className="text-4xl font-bold mb-4 text-center">{article.title}</h1>
-        <div className="text-gray-600 mb-4 text-center">
-            <span>{article.writer}</span> on{" "}
-            <span>{new Date(article.created_at).toLocaleDateString()}</span>
+      <Navbar />
+      <div className="min-h-screen bg-white/50 backdrop-blur-3xl pt-20 md:pt-36">
+        <h1 className="text-2xl md:text-4xl font-bold mb-4 text-center px-4">
+          {article.title}
+        </h1>
+        <div className="text-gray-600 mb-4 text-center px-4">
+          <span>{article.writer}</span> on{" "}
+          <span>{new Date(article.created_at).toLocaleDateString()}</span>
         </div>
-        <Image
-          src={article.image_url}
-          alt={article.title}
-          width={1200}
-          height={400}
-          className="w-1/2 h-96 mx-auto object-cover rounded-lg mb-6"
-        />
-        <p className="text-lg text-gray-700 p-24 mx-auto">{article.content}</p>
-        <Footer/>
+        <div className="w-full px-4 md:px-0">
+          <Image
+            src={article.image_url}
+            alt={article.title}
+            width={1200}
+            height={400}
+            className="w-full md:w-3/4 lg:w-1/2 h-64 md:h-96 mx-auto object-cover rounded-lg mb-6"
+          />
+        </div>
+        <p className="text-base md:text-lg text-gray-700 p-4 md:p-8 lg:p-12 mx-auto max-w-4xl">
+          {article.content}
+        </p>
+        <Footer />
       </div>
     </div>
   );

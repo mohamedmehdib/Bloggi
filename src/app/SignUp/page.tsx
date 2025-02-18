@@ -13,6 +13,13 @@ const SignUp = () => {
   const [name, setName] = useState("");
   const router = useRouter();
 
+  const bgStyle = {
+    backgroundImage: "url(/book.jpeg)",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  };
+
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -92,46 +99,48 @@ const SignUp = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="p-8 bg-white shadow-xl rounded-lg w-80">
-        <h2 className="text-2xl font-semibold mb-4">Sign Up</h2>
-        {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
-        {success && <div className="text-green-500 text-sm mb-4">{success}</div>}
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full p-2 border mb-4 rounded"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          aria-label="Email"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full p-2 border mb-4 rounded"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          aria-label="Password"
-        />
-        <input
-          type="text"
-          placeholder="Name"
-          className="w-full p-2 border mb-4 rounded"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          aria-label="Name"
-        />
+    <div className="overflow-x-hidden" style={bgStyle}>
+      <div className="min-h-screen flex items-center justify-center bg-white/50 backdrop-blur-3xl">
+        <div className="p-8 bg-white/50 shadow-xl rounded-lg w-80">
+          <h2 className="text-2xl font-semibold mb-4">Sign Up</h2>
+          {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
+          {success && <div className="text-green-500 text-sm mb-4">{success}</div>}
+          <input
+            type="email"
+            placeholder="Email"
+            className="w-full p-2 border mb-4 rounded"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            aria-label="Email"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            className="w-full p-2 border mb-4 rounded"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            aria-label="Password"
+          />
+          <input
+            type="text"
+            placeholder="Name"
+            className="w-full p-2 border mb-4 rounded"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            aria-label="Name"
+          />
 
-        <button
-          onClick={handleSignUp}
-          className={`w-full py-2 text-white rounded ${
-            loading ? "bg-blue-300 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
-          }`}
-          disabled={loading}
-          aria-disabled={loading}
-        >
-          {loading ? "Signing Up..." : "Sign Up"}
-        </button>
+          <button
+            onClick={handleSignUp}
+            className={`w-full py-2 text-white rounded ${
+              loading ? "bg-blue-300 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
+            }`}
+            disabled={loading}
+            aria-disabled={loading}
+          >
+            {loading ? "Signing Up..." : "Sign Up"}
+          </button>
+        </div>
       </div>
     </div>
   );

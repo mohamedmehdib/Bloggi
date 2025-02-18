@@ -137,12 +137,12 @@ export default function UploadArticle() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center">
-      <div className="bg-white/30 p-8 rounded-lg shadow-lg w-full max-w-2xl">
-        <h1 className="text-2xl font-semibold mb-6 text-center">
+    <div className="min-h-screen flex justify-center items-center p-4">
+      <div className="bg-white/30 p-6 md:p-8 rounded-lg shadow-lg w-full max-w-2xl">
+        <h1 className="text-xl md:text-2xl font-semibold mb-6 text-center">
           Upload a New Article
         </h1>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
           <div>
             <label htmlFor="title" className="block text-sm font-medium text-gray-700">
               Title
@@ -212,7 +212,7 @@ export default function UploadArticle() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-all"
+              className="w-full py-2 md:py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-all"
             >
               {loading ? "Uploading..." : "Upload Article"}
             </button>
