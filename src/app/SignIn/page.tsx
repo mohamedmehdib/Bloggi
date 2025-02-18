@@ -49,54 +49,45 @@ const SignIn = () => {
     }
   }, [email, password, router]);
 
+  const bgStyle = {
+    backgroundImage: "url(/book.jpeg)",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  };
+
   return (
-    <div className="flex justify-center items-center min-h-screen">
-      <div className="p-8 bg-white shadow-xl rounded-lg w-80">
-        <h2 className="text-2xl font-semibold mb-4">Sign In</h2>
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full p-2 border mb-4 rounded"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full p-2 border mb-4 rounded"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button
-          onClick={handleSignIn}
-          className={`w-full py-2 bg-blue-500 text-white rounded ${loading ? 'opacity-50' : ''}`}
-          disabled={loading}
-        >
-          {loading ? 'Signing In...' : 'Sign In'}
-        </button>
+    <div className="overflow-x-hidden" style={bgStyle}>
+      <div className="min-h-screen flex items-center justify-center bg-white/50 backdrop-blur-3xl">
+        <div className="z-10 p-8 bg-white/50 backdrop-blur-lg rounded-lg shadow-xl w-80">
+          <h2 className="text-2xl font-semibold mb-4">Sign In</h2>
+          <input
+            type="email"
+            placeholder="Email"
+            className="w-full p-2 border mb-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            className="w-full p-2 border mb-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button
+            onClick={handleSignIn}
+            className={`w-full py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors ${
+              loading ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
+            disabled={loading}
+          >
+            {loading ? 'Signing In...' : 'Sign In'}
+          </button>
 
-        {errorMessage && (
-          <p className="text-red-500 text-center mt-4">{errorMessage}</p>
-        )}
-
-        <div className="mt-4 text-center">
-          <p className="text-sm text-gray-600">
-            Don&apos;t have an account?{' '}
-            <span
-              onClick={() => router.push('/SignUp')}
-              className="text-blue-500 cursor-pointer"
-            >
-              Sign Up
-            </span>
-          </p>
-          <p className="text-sm text-gray-600 mt-2">
-            <span
-              onClick={() => router.push('/Reset')}
-              className="text-blue-500 cursor-pointer"
-            >
-              Reset Password
-            </span>
-          </p>
+          {errorMessage && (
+            <p className="text-red-500 text-center mt-4">{errorMessage}</p>
+          )}
         </div>
       </div>
     </div>

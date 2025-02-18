@@ -7,7 +7,7 @@ export default function UploadArticle() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [topic, setTopic] = useState("");
-  const [writer, setWriter] = useState(""); // State to store the writer's name
+  const [writer, setWriter] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -22,11 +22,9 @@ export default function UploadArticle() {
     "News",
   ];
 
-  // Fetch the authenticated user's name from the `users` table
   useEffect(() => {
     const fetchUserName = async () => {
       try {
-        // Step 1: Get the authenticated user's email
         const { data: { user } } = await supabase.auth.getUser();
 
         if (!user) {
@@ -35,7 +33,6 @@ export default function UploadArticle() {
 
         const userEmail = user.email;
 
-        // Step 2: Query the `users` table to find the `name` associated with the email
         const { data: userData, error: userError } = await supabase
           .from("users")
           .select("name")
@@ -46,7 +43,6 @@ export default function UploadArticle() {
           throw new Error("Failed to fetch user name.");
         }
 
-        // Step 3: Set the writer's name
         setWriter(userData.name);
       } catch (err) {
         console.error("Error fetching user name:", err);
@@ -103,13 +99,13 @@ export default function UploadArticle() {
         title,
         content,
         topic,
-        writer, // Include the writer's name
+        writer,
         image_url: imageUrl,
       });
 
       const { data, error } = await supabase
         .from("articles")
-        .insert([{ title, content, topic, writer, image_url: imageUrl }]) // Include writer in the insert
+        .insert([{ title, content, topic, writer, image_url: imageUrl }])
         .select();
 
       if (error) {

@@ -7,6 +7,7 @@ import Link from "next/link";
 import FormPage from "./Form";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import Footer from "../Footer";
 
 
 const Dashboard = () => {
@@ -101,6 +102,8 @@ const Dashboard = () => {
             </div>
           )}
         </main>
+
+        <Footer/>
       </div>
 
     </div>
