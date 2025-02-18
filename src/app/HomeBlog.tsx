@@ -20,6 +20,7 @@ export default function HomeBlog() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [disabledButtons, setDisabledButtons] = useState<{ [key: string]: boolean }>({});
 
   // Fetch articles from Supabase
   useEffect(() => {
@@ -55,6 +56,11 @@ export default function HomeBlog() {
     const date = new Date(dateString);
     const options: Intl.DateTimeFormatOptions = { year: "numeric", month: "long", day: "numeric" };
     return date.toLocaleDateString("en-US", options);
+  };
+
+  // Function to handle button click
+  const handleButtonClick = (slug: string) => {
+    setDisabledButtons((prev) => ({ ...prev, [slug]: true }));
   };
 
   // Loading and error states
@@ -102,7 +108,12 @@ export default function HomeBlog() {
               </p>
               <div className="my-3 w-fit text-white bg-black/80 p-3 rounded-lg font-semibold">
                 <Link href={`/articles/${article.slug}`}>
-                  Read More
+                  <button
+                    onClick={() => handleButtonClick(article.slug)}
+                    disabled={disabledButtons[article.slug]}
+                  >
+                    {disabledButtons[article.slug] ? "Loading..." : "Read More"}
+                  </button>
                 </Link>
               </div>
             </div>

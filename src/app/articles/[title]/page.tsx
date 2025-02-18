@@ -5,10 +5,9 @@ import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import Navbar from "@/app/Navbar";
-import Footer from "@/app/Footer";
+import Navbar from "../../Navbar";
+import Footer from "../../Footer";
 
-// Define the Article interface
 interface Article {
   title: string;
   topic: string;
@@ -20,19 +19,25 @@ interface Article {
 }
 
 export default function ArticlePage() {
-  const params = useParams(); // Get params from the URL
-  const [article, setArticle] = useState<Article | null>(null); // Use the Article interface
+  const params = useParams();
+  const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+
+  const bgStyle = {
+    backgroundImage: "url(/book.jpeg)",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  };
 
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        // Fetch the article from Supabase using the slug
         const { data, error } = await supabase
           .from("articles")
           .select("*")
-          .eq("slug", params.title) // Use the slug for querying
+          .eq("slug", params.title)
           .single();
 
         if (error || !data) {
@@ -64,22 +69,24 @@ export default function ArticlePage() {
   }
 
   return (
-    <div className="p-10">
-        <Navbar/>
-        <h1 className="text-4xl font-bold mb-4">{article.title}</h1>
-        <div className="text-gray-600 mb-4">
+    <div style={bgStyle} className="overflow-x-hidden">
+      <Navbar/>
+      <div className="min-h-screen bg-white/50 backdrop-blur-3xl pt-36">
+        <h1 className="text-4xl font-bold mb-4 text-center">{article.title}</h1>
+        <div className="text-gray-600 mb-4 text-center">
             <span>{article.writer}</span> on{" "}
             <span>{new Date(article.created_at).toLocaleDateString()}</span>
         </div>
         <Image
-        src={article.image_url}
-        alt={article.title}
-        width={1200} // Set appropriate width
-        height={400} // Set appropriate height
-        className="w-full h-96 object-cover rounded-lg mb-6"
+          src={article.image_url}
+          alt={article.title}
+          width={1200}
+          height={400}
+          className="w-1/2 h-96 mx-auto object-cover rounded-lg mb-6"
         />
-        <p className="text-lg text-gray-700">{article.content}</p>
+        <p className="text-lg text-gray-700 p-24 mx-auto">{article.content}</p>
         <Footer/>
+      </div>
     </div>
   );
 }
