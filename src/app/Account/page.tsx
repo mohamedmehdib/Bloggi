@@ -52,7 +52,6 @@ const Dashboard = () => {
     <div style={bgStyle} className="min-h-screen">
       <Navbar />
       <div className="min-h-screen bg-white/50 backdrop-blur-3xl">
-        {/* Hero Section */}
         <div className="h-[40vh] sm:h-[50vh]">
           <div className="w-full h-full flex justify-center items-center">
             <div className="text-center">
